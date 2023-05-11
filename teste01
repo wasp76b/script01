@@ -1,0 +1,27 @@
+import requests
+import random
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-l", "--file", help="Arquivo contendo as URLs", required=True)
+args = parser.parse_args()
+
+# lê as URLs a partir do arquivo informado como parâmetro
+filename = args.file
+with open(filename, "r") as f:
+    urls = f.readlines()
+
+# remove duplicidades
+urls = list(set(urls))
+
+# escolhe randomicamente uma URL online
+random.shuffle(urls)
+for url in urls:
+    url = url.strip()  # remove caracteres de quebra de linha
+    try:
+        response = requests.head(url)
+        if response.status_code == 200:
+            print(url)
+            break
+    except requests.exceptions.RequestException as e:
+        print(f"Erro ao acessar {url}: {e}")
