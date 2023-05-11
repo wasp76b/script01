@@ -1,31 +1,27 @@
-import requests
 import random
 
 urls = [
-    'https://www.okx.com/de/account/register?action=header_register_btn',
-    'https://www.okx.com/tr/account/register?action=header_register_btn',
-    'https://www.okx.com/pl/account/register?action=header_register_btn',
-    'https://www.okx.com/ua/account/register?action=header_register_btn',
-    'https://www.okx.com/it/earn/dual?from=home',
-    'https://www.okx.com/hk/earn/dual?from=home',
-    'https://www.okx.com/pl/earn/dual?from=home',
-    'https://www.okx.com/id/earn/dual?from=home'
+    "https://www.okx.com/de/account/register?action=header_register_btn",
+    "https://www.okx.com/tr/account/register?action=header_register_btn",
+    "https://www.okx.com/pl/account/register?action=header_register_btn",
+    "https://www.okx.com/ua/account/register?action=header_register_btn",
+    "https://www.okx.com/it/earn/dual?from=home",
+    "https://www.okx.com/hk/earn/dual?from=home",
+    "https://www.okx.com/pl/earn/dual?from=home",
+    "https://www.okx.com/id/earn/dual?from=home"
 ]
 
-# identifica o padrão da URL
-pattern = urls[0].split('?')[0]
-
-# verifica quais estão online
-online_urls = []
-for url in urls:
-    if requests.head(url).status_code == 200:
-        online_urls.append(url)
-
-# remove as duplicatas aleatoriamente
 unique_urls = []
-for url in online_urls:
-    if url.split('?')[0] == pattern and url not in unique_urls:
-        unique_urls.append(url)
 
-random.shuffle(unique_urls)
-print(unique_urls)
+for url in urls:
+    # Remove o identificador de idioma da URL
+    base_url = url.split('?')[0]
+    
+    # Se a URL não estiver na lista de URLs únicas, adiciona
+    if base_url not in unique_urls:
+        unique_urls.append(base_url)
+
+# Escolhe uma URL aleatória entre as URLs únicas
+chosen_url = random.choice(unique_urls)
+
+print(chosen_url)
