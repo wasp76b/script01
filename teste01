@@ -1,4 +1,4 @@
-import random
+from urllib.parse import urlsplit
 
 urls = [
     "https://www.okx.com/de/account/register?action=header_register_btn",
@@ -11,17 +11,11 @@ urls = [
     "https://www.okx.com/id/earn/dual?from=home"
 ]
 
-unique_urls = []
+unique_urls = set()
 
 for url in urls:
-    # Remove o identificador de idioma da URL
-    base_url = url.split('?')[0]
-    
-    # Se a URL não estiver na lista de URLs únicas, adiciona
-    if base_url not in unique_urls:
-        unique_urls.append(base_url)
-
-# Escolhe uma URL aleatória entre as URLs únicas
-chosen_url = random.choice(unique_urls)
-
-print(chosen_url)
+    components = urlsplit(url)
+    relevant_components = (components.scheme, components.netloc, components.path, components.query)
+    if relevant_components not in unique_urls:
+        unique_urls.add(relevant_components)
+        print(url)
