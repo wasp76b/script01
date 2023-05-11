@@ -1,21 +1,16 @@
-import difflib
+import urllib.parse
+import url_normalize
 
-urls = [
-    "https://www.okx.com/de/account/register?action=header_register_btn",
-    "https://www.okx.com/tr/account/register?action=header_register_btn",
-    "https://www.okx.com/pl/account/register?action=header_register_btn",
-    "https://www.okx.com/ua/account/register?action=header_register_btn",
-    "https://www.okx.com/it/earn/dual?from=home",
-    "https://www.okx.com/hk/earn/dual?from=home",
-    "https://www.okx.com/pl/earn/dual?from=home",
-    "https://www.okx.com/id/earn/dual?from=home",
-]
+urls = [    'https://www.okx.com/de/account/register?action=header_register_btn',    'https://www.okx.com/tr/account/register?action=header_register_btn',    'https://www.okx.com/pl/account/register?action=header_register_btn',    'https://www.okx.com/ua/account/register?action=header_register_btn',    'https://www.okx.com/it/earn/dual?from=home',    'https://www.okx.com/hk/earn/dual?from=home',    'https://www.okx.com/pl/earn/dual?from=home',    'https://www.okx.com/id/earn/dual?from=home']
 
-unique_urls = []
+unique_urls = set()
+normalized_urls = set()
 
 for url in urls:
-    # verifica se a url já foi adicionada à lista de urls únicas
-    if not any(difflib.SequenceMatcher(None, url, unique_url).ratio() > 0.9 for unique_url in unique_urls):
-        unique_urls.append(url)
+    normalized_url = url_normalize.url_normalize(url)
+    parsed_url = urllib.parse.urlparse(normalized_url)._replace(query='') # Remove a parte da query para evitar que URLs diferentes com a mesma query sejam consideradas iguais
+    if parsed_url not in normalized_urls:
+        normalized_urls.add(parsed_url)
+        unique_urls.add(url)
 
 print(unique_urls)
