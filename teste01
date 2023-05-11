@@ -1,16 +1,47 @@
-import urllib.parse
-import url_normalize
+import math
 
-urls = [    'https://www.okx.com/de/account/register?action=header_register_btn',    'https://www.okx.com/tr/account/register?action=header_register_btn',    'https://www.okx.com/pl/account/register?action=header_register_btn',    'https://www.okx.com/ua/account/register?action=header_register_btn',    'https://www.okx.com/it/earn/dual?from=home',    'https://www.okx.com/hk/earn/dual?from=home',    'https://www.okx.com/pl/earn/dual?from=home',    'https://www.okx.com/id/earn/dual?from=home']
+# Função para calcular a entropia de uma string
+def entropy(s):
+    p, lns = Counter(s), float(len(s))
+    return -sum( count/lns * math.log2(count/lns) for count in p.values())
 
-unique_urls = set()
-normalized_urls = set()
+# Lista de URLs
+urls = [
+    "https://www.okx.com/de/account/register?action=header_register_btn",
+    "https://www.okx.com/tr/account/register?action=header_register_btn",
+    "https://www.okx.com/pl/account/register?action=header_register_btn",
+    "https://www.okx.com/ua/account/register?action=header_register_btn",
+    "https://www.okx.com/it/earn/dual?from=home",
+    "https://www.okx.com/hk/earn/dual?from=home",
+    "https://www.okx.com/pl/earn/dual?from=home",
+    "https://www.okx.com/id/earn/dual?from=home"
+]
 
+unique_urls = []
+threshold = 0.9
+
+# Loop pelas URLs
 for url in urls:
-    normalized_url = url_normalize.url_normalize(url)
-    parsed_url = urllib.parse.urlparse(normalized_url)._replace(query='') # Remove a parte da query para evitar que URLs diferentes com a mesma query sejam consideradas iguais
-    if parsed_url not in normalized_urls:
-        normalized_urls.add(parsed_url)
-        unique_urls.add(url)
+    # Calcula a entropia da URL
+    url_entropy = entropy(url)
+    is_duplicate = False
+    
+    # Loop pelas URLs únicas já encontradas
+    for unique_url in unique_urls:
+        # Calcula a entropia da URL única
+        unique_url_entropy = entropy(unique_url)
+        
+        # Calcula a similaridade entre as URLs usando a entropia
+        similarity = (url_entropy + unique_url_entropy) / (2 * max(url_entropy, unique_url_entropy))
+        
+        # Verifica se a URL é uma duplicata
+        if similarity > threshold:
+            is_duplicate = True
+            break
+    
+    # Adiciona a URL à lista de URLs únicas, se não for uma duplicata
+    if not is_duplicate:
+        unique_urls.append(url)
 
+# Imprime as URLs únicas encontradas
 print(unique_urls)
