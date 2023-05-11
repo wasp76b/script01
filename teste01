@@ -20,17 +20,20 @@ except FileNotFoundError:
     exit()
 
 # Verifique quais URLs estão online
-online_urls = set()
+online_urls = []
 for url in urls:
     try:
         # Faça uma solicitação HTTP para a URL
         response = requests.get(url)
         # Verifique se a URL está online
         if response.status_code == 200:
-            online_urls.add(url)
+            online_urls.append(url)
     except:
         pass
 
-# Escolha uma URL aleatória entre as URLs online
-chosen_url = random.choice(list(online_urls))
-print("URL escolhida:", chosen_url)
+# Escolha uma URL aleatória da lista de URLs online
+if online_urls:
+    chosen_url = random.choice(online_urls)
+    print("URL escolhida:", chosen_url)
+else:
+    print("Nenhuma URL está online.")
