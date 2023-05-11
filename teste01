@@ -1,38 +1,31 @@
 import requests
-import argparse
 import random
 
-# Define os argumentos do script
-parser = argparse.ArgumentParser()
-parser.add_argument("-l", "--url_list", help="Nome do arquivo que contém as URLs", required=True)
-args = parser.parse_args()
+urls = [
+    'https://www.okx.com/de/account/register?action=header_register_btn',
+    'https://www.okx.com/tr/account/register?action=header_register_btn',
+    'https://www.okx.com/pl/account/register?action=header_register_btn',
+    'https://www.okx.com/ua/account/register?action=header_register_btn',
+    'https://www.okx.com/it/earn/dual?from=home',
+    'https://www.okx.com/hk/earn/dual?from=home',
+    'https://www.okx.com/pl/earn/dual?from=home',
+    'https://www.okx.com/id/earn/dual?from=home'
+]
 
-# Abre o arquivo e lê as URLs
-with open(args.url_list) as f:
-    urls = [line.rstrip() for line in f]
+# identifica o padrão da URL
+pattern = urls[0].split('?')[0]
 
-# Cria um dicionário para armazenar as URLs únicas
-unique_urls = {}
-
-# Percorre as URLs e identifica as duplicatas com base no padrão da URL
-for url in urls:
-    pattern = url.split('?')[0] # Pega o padrão da URL, ignorando os parâmetros
-    if pattern not in unique_urls:
-        unique_urls[pattern] = url # Armazena a primeira ocorrência do padrão
-
-# Verifica quais URLs estão online e armazena em uma lista
+# verifica quais estão online
 online_urls = []
-for url in unique_urls.values():
-    try:
-        response = requests.get(url)
-        if response.status_code == 200:
-            online_urls.append(url)
-    except:
-        pass
+for url in urls:
+    if requests.head(url).status_code == 200:
+        online_urls.append(url)
 
-# Escolhe aleatoriamente uma URL online e imprime na tela
-if online_urls:
-    chosen_url = random.choice(online_urls)
-    print(chosen_url)
-else:
-    print("Nenhuma URL está online")
+# remove as duplicatas aleatoriamente
+unique_urls = []
+for url in online_urls:
+    if url.split('?')[0] == pattern and url not in unique_urls:
+        unique_urls.append(url)
+
+random.shuffle(unique_urls)
+print(unique_urls)
