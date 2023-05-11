@@ -1,0 +1,8 @@
+https://www.okx.com/de/account/register?action=header_register_btn
+https://www.okx.com/tr/account/register?action=header_register_btn
+https://www.okx.com/pl/account/register?action=header_register_btn
+https://www.okx.com/ua/account/register?action=header_register_btn
+https://www.okx.com/it/earn/dual?from=home
+https://www.okx.com/hk/earn/dual?from=home
+https://www.okx.com/pl/earn/dual?from=home
+https://www.okx.com/id/earn/dual?from=home
