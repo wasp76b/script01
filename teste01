@@ -1,4 +1,4 @@
-from urllib.parse import urlsplit
+import difflib
 
 urls = [
     "https://www.okx.com/de/account/register?action=header_register_btn",
@@ -8,14 +8,14 @@ urls = [
     "https://www.okx.com/it/earn/dual?from=home",
     "https://www.okx.com/hk/earn/dual?from=home",
     "https://www.okx.com/pl/earn/dual?from=home",
-    "https://www.okx.com/id/earn/dual?from=home"
+    "https://www.okx.com/id/earn/dual?from=home",
 ]
 
-unique_urls = set()
+unique_urls = []
 
 for url in urls:
-    components = urlsplit(url)
-    relevant_components = (components.scheme, components.netloc, components.path, components.query)
-    if relevant_components not in unique_urls:
-        unique_urls.add(relevant_components)
-        print(url)
+    # verifica se a url já foi adicionada à lista de urls únicas
+    if not any(difflib.SequenceMatcher(None, url, unique_url).ratio() > 0.9 for unique_url in unique_urls):
+        unique_urls.append(url)
+
+print(unique_urls)
